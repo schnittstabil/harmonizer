@@ -1,0 +1,22 @@
+{
+    "name": "schnittstabil/harmonizer",
+    "type": "library",
+    "description": "Harmonize PHP module, CGI and FCGI/FastCGI environments by infering missing $_SERVER variables like REMOTE_USER and HTTP_AUTHORIZATION.",
+    "license": "MIT",
+    "keywords": ["cgi", "fcgi", "fastcgi", "environment", "env", "_SERVER", "http", "basic", "digest", "auth", "authentication", "authorization"],
+    "homepage": "https://github.com/schnittstabil/harmonizer",
+    "authors": [
+        {
+            "name": "Michael Mayer",
+            "email": "michael@schnittstabil.de"
+        }
+    ],
+    "autoload": {
+        "psr-4": { "Schnittstabil\\Harmonizer\\": "Schnittstabil/Harmonizer" }
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^5.0",
+        "fabpot/php-cs-fixer": "^1.10",
+        "satooshi/php-coveralls": "^0.6.1"
+    }
+}
