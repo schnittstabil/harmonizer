@@ -1,4 +1,4 @@
-# Harmonizer [![Build Status](https://travis-ci.org/schnittstabil/harmonizer.svg?branch=master)](https://travis-ci.org/schnittstabil/harmonizer) [![Coverage Status](https://coveralls.io/repos/schnittstabil/harmonizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/schnittstabil/harmonizer?branch=master)
+# Harmonizer [![Build Status](https://travis-ci.org/schnittstabil/harmonizer.svg?branch=master)](https://travis-ci.org/schnittstabil/harmonizer) [![Coverage Status](https://coveralls.io/repos/schnittstabil/harmonizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/schnittstabil/harmonizer?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/schnittstabil/harmonizer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/schnittstabil/harmonizer/?branch=master) [![Code Climate](https://codeclimate.com/github/schnittstabil/harmonizer/badges/gpa.svg)](https://codeclimate.com/github/schnittstabil/harmonizer)
 
 > Harmonize PHP module, CGI and FCGI/FastCGI environments by infering missing `$_SERVER` variables like `REMOTE_USER` and `HTTP_AUTHORIZATION`.
 
@@ -15,7 +15,7 @@ $ composer require schnittstabil/harmonizer
 ```php
 require __DIR__.'/vendor/autoload.php';
 
-Schnittstabil\Harmonizer\Harmonizer::harmonize();
+Schnittstabil\Harmonizer\Harmonizer::harmonize($_SERVER);
 
 echo 'Hello '.$_SERVER['REMOTE_USER'];
 ```
@@ -23,11 +23,13 @@ echo 'Hello '.$_SERVER['REMOTE_USER'];
 
 ## API
 
-### Schnittstabil\Harmonizer\Harmonizer::harmonize()
+### Schnittstabil\Harmonizer\Harmonizer::harmonize(&$server)
 
-Infering missing `$_SERVER` variables:
+Infering missing variables in `$server`:
 
 ```php
+Schnittstabil\Harmonizer\Harmonizer::harmonize($_SERVER);
+
 // $_SERVER['.*'] from $_SERVER['REDIRECT_.*'], eg.
 $_SERVER['HTTP_AUTHORIZATION']  // from $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];
 $_SERVER['GEOIP_LATITUDE']      // from $_SERVER['REDIRECT_REDIRECT_GEOIP_LATITUDE'];

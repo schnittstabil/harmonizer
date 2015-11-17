@@ -14,4 +14,9 @@ script:
   - make test
 
 after_success:
+  - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then vendor/bin/test-reporter; fi
   - if [ "$TRAVIS_PHP_VERSION" == "5.6" ]; then vendor/bin/coveralls -v; fi
+
+addons:
+  code_climate:
+    repo_token: 2b52cfd806acb35fd4aba0d34dafc5f47713b76131da32950246b0224957fc24

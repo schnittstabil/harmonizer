@@ -22,7 +22,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
     public function testHarmonizeRedirectVariablesShouldInferREDIRECT_()
     {
         $array = ['REDIRECT_HTTP_AUTHORIZATION' => self::$basicAuthAlice];
-        $this->assertTrue($array === Harmonizer::harmonizeRedirectVariables($array));
+        $this->assertTrue($array === (new Harmonizer($array))->harmonizeRedirectVariables()->server);
         $this->assertEquals(self::$basicAuthAlice, $array['REDIRECT_HTTP_AUTHORIZATION']);
         $this->assertEquals(self::$basicAuthAlice, $array['HTTP_AUTHORIZATION']);
     }
@@ -33,7 +33,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
         $array['REDIRECT_REDIRECT_REDIRECT_HTTP_AUTHORIZATION'] = self::$basicAuthAlice;
         $array['REDIRECT_HTTP_AUTHORIZATION'] = self::$digestAuthBob;
 
-        $this->assertTrue($array === Harmonizer::harmonizeRedirectVariables($array));
+        $this->assertTrue($array === (new Harmonizer($array))->harmonizeRedirectVariables()->server);
         $this->assertEquals(self::$basicAuthAlice, $array['REDIRECT_REDIRECT_REDIRECT_HTTP_AUTHORIZATION']);
         $this->assertEquals(self::$basicAuthAlice, $array['REDIRECT_REDIRECT_HTTP_AUTHORIZATION']);
         $this->assertEquals(self::$digestAuthBob, $array['REDIRECT_HTTP_AUTHORIZATION']);
@@ -45,7 +45,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']));
         $this->assertFalse(isset($_SERVER['HTTP_AUTHORIZATION']));
         $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = self::$basicAuthAlice;
-        $this->assertArraySubset($_SERVER, Harmonizer::harmonizeRedirectVariables());
+        $this->assertArraySubset($_SERVER, (new Harmonizer($_SERVER))->harmonizeRedirectVariables()->server);
         $this->assertArraySubset(['REDIRECT_HTTP_AUTHORIZATION' => self::$basicAuthAlice], $_SERVER);
         $this->assertArraySubset(['HTTP_AUTHORIZATION' => self::$basicAuthAlice], $_SERVER);
     }
@@ -53,7 +53,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
     public function testHarmonizeUserVariablesShouldInferREMOTE_USER()
     {
         $array = ['REMOTE_USER' => 'Alice'];
-        $this->assertTrue($array === Harmonizer::harmonizeUserVariables($array));
+        $this->assertTrue($array === (new Harmonizer($array))->harmonizeUserVariables()->server);
         $this->assertArraySubset(['REMOTE_USER' => 'Alice'], $array);
         $this->assertArraySubset(['PHP_AUTH_USER' => 'Alice'], $array);
     }
@@ -61,7 +61,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
     public function testHarmonizeUserVariablesShouldInferPHP_AUTH_USER()
     {
         $array = ['PHP_AUTH_USER' => 'Bob'];
-        $this->assertTrue($array === Harmonizer::harmonizeUserVariables($array));
+        $this->assertTrue($array === (new Harmonizer($array))->harmonizeUserVariables()->server);
         $this->assertArraySubset(['REMOTE_USER' => 'Bob'], $array);
         $this->assertArraySubset(['PHP_AUTH_USER' => 'Bob'], $array);
     }
@@ -71,7 +71,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($_SERVER['REMOTE_USER']));
         $this->assertFalse(isset($_SERVER['PHP_AUTH_USER']));
         $_SERVER['REMOTE_USER'] = 'Carol';
-        $this->assertArraySubset($_SERVER, Harmonizer::harmonizeUserVariables());
+        $this->assertArraySubset($_SERVER, (new Harmonizer($_SERVER))->harmonizeUserVariables()->server);
         $this->assertArraySubset(['REMOTE_USER' => 'Carol'], $_SERVER);
         $this->assertArraySubset(['PHP_AUTH_USER' => 'Carol'], $_SERVER);
     }
@@ -79,7 +79,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
     public function testHarmonizeShouldInferREDIRECT_()
     {
         $array = ['REDIRECT_HTTP_AUTHORIZATION' => self::$basicAuthAlice];
-        $this->assertTrue($array === Harmonizer::harmonize($array));
+        $this->assertTrue($array === Harmonizer::harmonize($array)->server);
         $this->assertEquals(self::$basicAuthAlice, $array['REDIRECT_HTTP_AUTHORIZATION']);
         $this->assertEquals(self::$basicAuthAlice, $array['HTTP_AUTHORIZATION']);
         $this->assertArraySubset(['AUTH_TYPE' => 'Basic'], $array);
@@ -93,7 +93,7 @@ class HarmonizerTest extends \PHPUnit_Framework_TestCase
         $this->assertFalse(isset($_SERVER['REDIRECT_HTTP_AUTHORIZATION']));
         $this->assertFalse(isset($_SERVER['HTTP_AUTHORIZATION']));
         $_SERVER['REDIRECT_HTTP_AUTHORIZATION'] = self::$digestAuthBob;
-        $this->assertArraySubset($_SERVER, Harmonizer::harmonize());
+        $this->assertArraySubset($_SERVER, Harmonizer::harmonize($_SERVER)->server);
         $this->assertArraySubset(['REDIRECT_HTTP_AUTHORIZATION' => self::$digestAuthBob], $_SERVER);
         $this->assertArraySubset(['HTTP_AUTHORIZATION' => self::$digestAuthBob], $_SERVER);
         $this->assertArraySubset(['AUTH_TYPE' => 'Digest'], $_SERVER);

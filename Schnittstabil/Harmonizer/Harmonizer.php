@@ -4,80 +4,75 @@ namespace Schnittstabil\Harmonizer;
 
 class Harmonizer
 {
-    public static function harmonize(&$server = null)
-    {
-        if (is_null($server)) {
-            $server = &$_SERVER;
-        }
-        self::harmonizeRedirectVariables($server);
-        self::harmonizeUserVariables($server);
+    public $server;
 
-        return $server;
+    public function __construct(&$server)
+    {
+        $this->server = &$server;
     }
 
-    public static function harmonizeRedirectVariables(&$server = null)
+    private function arrayAdd(&$array, $key, $value)
     {
-        if (is_null($server)) {
-            $server = &$_SERVER;
+        if (!isset($array[$key])) {
+            $array[$key] = $value;
         }
-        foreach (array_keys($server) as $redirectKey) {
+    }
+
+    public function harmonizeRedirectVariables()
+    {
+        foreach (array_keys($this->server) as $redirectKey) {
             $key = $redirectKey;
             while (substr($key, 0, 9) === 'REDIRECT_') {
                 $key = substr($key, 9);
-                if (!isset($server[$key])) {
-                    $server[$key] = $server[$redirectKey];
-                } else {
+                if (isset($this->server[$key])) {
                     $redirectKey = $key;
+                    continue;
                 }
+                $this->server[$key] = $this->server[$redirectKey];
             }
         }
 
-        return $server;
+        return $this;
     }
 
-    public static function harmonizeUserVariables(&$server = null)
+    public function harmonizeUserVariables()
     {
-        if (is_null($server)) {
-            $server = &$_SERVER;
+        if (isset($this->server['PHP_AUTH_USER'])) {
+            $this->arrayAdd($this->server, 'REMOTE_USER', $this->server['PHP_AUTH_USER']);
         }
-        if (!isset($server['REMOTE_USER']) && isset($server['PHP_AUTH_USER'])) {
-            $server['REMOTE_USER'] = $server['PHP_AUTH_USER'];
+        if (isset($this->server['REMOTE_USER'])) {
+            $this->arrayAdd($this->server, 'PHP_AUTH_USER', $this->server['REMOTE_USER']);
         }
-        if (isset($server['REMOTE_USER']) && !isset($server['PHP_AUTH_USER'])) {
-            $server['PHP_AUTH_USER'] = $server['REMOTE_USER'];
-        }
-        if (isset($server['HTTP_AUTHORIZATION'])) {
-            $auth = $server['HTTP_AUTHORIZATION'];
+
+        return $this;
+    }
+
+    public function harmonizeHttpAuth()
+    {
+        if (isset($this->server['HTTP_AUTHORIZATION'])) {
+            $auth = $this->server['HTTP_AUTHORIZATION'];
             if ('Basic ' === substr($auth, 0, 6)) {
                 list($username, $password) = explode(':', base64_decode(substr($auth, 6)));
-                if (!isset($server['AUTH_TYPE'])) {
-                    $server['AUTH_TYPE'] = 'Basic';
-                }
-                if (!isset($server['REMOTE_USER'])) {
-                    $server['REMOTE_USER'] = $username;
-                }
-                if (!isset($server['PHP_AUTH_USER'])) {
-                    $server['PHP_AUTH_USER'] = $username;
-                }
-                if (!isset($server['PHP_AUTH_PW'])) {
-                    $server['PHP_AUTH_PW'] = $password;
-                }
+                $this->arrayAdd($this->server, 'AUTH_TYPE', 'Basic');
+                $this->arrayAdd($this->server, 'REMOTE_USER', $username);
+                $this->arrayAdd($this->server, 'PHP_AUTH_USER', $username);
+                $this->arrayAdd($this->server, 'PHP_AUTH_PW', $password);
             } elseif (preg_match('/^Digest .*username="(?P<username>[^"]*)".*$/', $auth, $matches)) {
-                if (!isset($server['AUTH_TYPE'])) {
-                    $server['AUTH_TYPE'] = 'Digest';
-                }
-                if (!isset($server['PHP_AUTH_DIGEST'])) {
-                    $server['PHP_AUTH_DIGEST'] = substr($auth, 7);
-                }
-                if (!isset($server['REMOTE_USER'])) {
-                    $server['REMOTE_USER'] = $matches['username'];
-                }
-                if (!isset($server['PHP_AUTH_USER'])) {
-                    $server['PHP_AUTH_USER'] = $matches['username'];
-                }
+                $this->arrayAdd($this->server, 'AUTH_TYPE', 'Digest');
+                $this->arrayAdd($this->server, 'PHP_AUTH_DIGEST', substr($auth, 7));
+                $this->arrayAdd($this->server, 'REMOTE_USER', $matches['username']);
+                $this->arrayAdd($this->server, 'PHP_AUTH_USER', $matches['username']);
             }
         }
 
-        return $server;
+        return $this;
+    }
+
+    public static function harmonize(&$server)
+    {
+        return (new self($server))
+        ->harmonizeRedirectVariables()
+        ->harmonizeUserVariables()
+        ->harmonizeHttpAuth();
     }
 }
