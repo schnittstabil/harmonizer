@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Harmonizer;
+namespace Schnittstabil;
 
 class HarmonizerTest extends \PHPUnit_Framework_TestCase
 {

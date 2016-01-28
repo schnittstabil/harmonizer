@@ -1,6 +1,6 @@
 <?php
 
-namespace Schnittstabil\Harmonizer;
+namespace Schnittstabil;
 
 class Harmonizer
 {
