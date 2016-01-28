@@ -1,6 +1,11 @@
-.PHONY: lint phpunit test
+.PHONY: clean lint phpunit test
 
-test: lint phpunit
+test: clean lint phpunit
+
+clean:
+	@tput setaf 2; echo cleaning up...; tput sgr0
+	@rm -rf build
+	@rm -rf coverage
 
 lint:
 	@tput setaf 2; echo running lint...; tput sgr0
