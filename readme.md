@@ -1,5 +1,7 @@
 # Harmonizer [![Build Status](https://travis-ci.org/schnittstabil/harmonizer.svg?branch=master)](https://travis-ci.org/schnittstabil/harmonizer) [![Coverage Status](https://coveralls.io/repos/schnittstabil/harmonizer/badge.svg?branch=master&service=github)](https://coveralls.io/github/schnittstabil/harmonizer?branch=master) [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/schnittstabil/harmonizer/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/schnittstabil/harmonizer/?branch=master) [![Code Climate](https://codeclimate.com/github/schnittstabil/harmonizer/badges/gpa.svg)](https://codeclimate.com/github/schnittstabil/harmonizer)
 
+[![SensioLabsInsight](https://insight.sensiolabs.com/projects/3d29fc53-defc-464f-b0ea-26ae3aa513cf/big.png)](https://insight.sensiolabs.com/projects/3d29fc53-defc-464f-b0ea-26ae3aa513cf)
+
 > Harmonize PHP module, CGI and FCGI/FastCGI environments by infering missing `$_SERVER` variables like `REMOTE_USER` and `HTTP_AUTHORIZATION`.
 
 
