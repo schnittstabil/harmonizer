@@ -1,0 +1,7 @@
+tests/           export-ignore
+.codeclimate.yml export-ignore
+.coveralls.yml   export-ignore
+.travis.yml      export-ignore
+makefile         export-ignore
+phpunit.xml.dist export-ignore
+readme.md        export-ignore
