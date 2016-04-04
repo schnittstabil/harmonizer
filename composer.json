@@ -12,12 +12,38 @@
         }
     ],
     "autoload": {
-        "psr-4": { "Schnittstabil\\": "Schnittstabil" }
+        "psr-4": { "Schnittstabil\\Harmonizer\\": "src" },
+        "files": ["src/functions.php"]
     },
+    "autoload-dev": {
+        "psr-4": { "Schnittstabil\\Harmonizer\\": "tests" }
+    },
+    "repositories": [
+        {
+            "type": "git",
+            "url": "https://github.com/schnittstabil/pdepend.git"
+        }
+    ],
     "require-dev": {
-        "phpunit/phpunit": "^5.0",
+        "codeclimate/php-test-reporter": "^0.2.0",
         "fabpot/php-cs-fixer": "^1.10",
+        "phpmd/phpmd": "^2.3",
+        "pdepend/pdepend": "dev-fix-namespaced-consts-and-functions as 2.0",
         "satooshi/php-coveralls": "^0.6.1",
-        "codeclimate/php-test-reporter": "^0.2.0"
+        "schnittstabil/sugared-phpunit": "^0.2.0",
+        "squizlabs/php_codesniffer": "^2.5"
+    },
+    "scripts": {
+        "clean": "rm -rf build/",
+        "lint": [
+            "phpcs -s --standard=PSR1,PSR2 src/ tests/",
+            "phpmd src text cleancode,codesize,controversial,design,naming,unusedcode",
+            "php-cs-fixer fix --dry-run --diff src",
+            "php-cs-fixer fix --dry-run --diff tests"
+        ],
+        "test": [
+            "sugared-phpunit",
+            "composer lint"
+        ]
     }
 }

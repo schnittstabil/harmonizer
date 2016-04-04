@@ -17,7 +17,7 @@ $ composer require schnittstabil/harmonizer
 ```php
 require __DIR__.'/vendor/autoload.php';
 
-Schnittstabil\Harmonizer::harmonize($_SERVER);
+\Schnittstabil\Harmonizer\harmonize($_SERVER);
 
 echo 'Hello '.$_SERVER['REMOTE_USER'];
 ```
@@ -25,12 +25,12 @@ echo 'Hello '.$_SERVER['REMOTE_USER'];
 
 ## API
 
-### Schnittstabil\Harmonizer::harmonize(&$server)
+### Schnittstabil\Harmonizer\harmonize(&$server)
 
 Infering missing variables in `$server`:
 
 ```php
-Schnittstabil\Harmonizer::harmonize($_SERVER);
+\Schnittstabil\Harmonizer\harmonize($_SERVER);
 
 // $_SERVER['.*'] from $_SERVER['REDIRECT_.*'], eg.
 $_SERVER['HTTP_AUTHORIZATION']  // from $_SERVER['REDIRECT_HTTP_AUTHORIZATION'];

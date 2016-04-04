@@ -1,23 +1,43 @@
 <?php
 
-namespace Schnittstabil;
+namespace Schnittstabil\Harmonizer;
 
+/**
+ * Harmonizer.
+ */
 class Harmonizer
 {
     public $server;
 
-    public function __construct(&$server)
+    /**
+     * Create a new Harmonizer instance.
+     *
+     * @param array $server array to infer
+     */
+    public function __construct(array &$server)
     {
         $this->server = &$server;
     }
 
-    private function arrayAdd(&$array, $key, $value)
+    /**
+     * Add entry to an array iff it doesn't exist an entry with the same key.
+     *
+     * @param array $array array of entries
+     * @param mixed $key   key of new entry
+     * @param mixed $value value of new entry
+     */
+    private function arrayAdd(array &$array, $key, $value)
     {
         if (!isset($array[$key])) {
             $array[$key] = $value;
         }
     }
 
+    /**
+     * Infering (in-place) missing REDIRECT_ variables in `$server`.
+     *
+     * @return static
+     */
     public function harmonizeRedirectVariables()
     {
         foreach (array_keys($this->server) as $redirectKey) {
@@ -35,6 +55,11 @@ class Harmonizer
         return $this;
     }
 
+    /**
+     * Infering (in-place) missing user variables in `$server`.
+     *
+     * @return static
+     */
     public function harmonizeUserVariables()
     {
         if (isset($this->server['PHP_AUTH_USER'])) {
@@ -47,6 +72,11 @@ class Harmonizer
         return $this;
     }
 
+    /**
+     * Infering (in-place) missing authorization variables in `$server`.
+     *
+     * @return static
+     */
     public function harmonizeHttpAuth()
     {
         if (isset($this->server['HTTP_AUTHORIZATION'])) {
@@ -68,7 +98,14 @@ class Harmonizer
         return $this;
     }
 
-    public static function harmonize(&$server)
+    /**
+     * Infering (in-place) missing variables in `$server`.
+     *
+     * @param array $server array to infer
+     *
+     * @return array $server
+     */
+    public static function harmonize(array &$server)
     {
         return (new self($server))
         ->harmonizeRedirectVariables()
